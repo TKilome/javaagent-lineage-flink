@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">javaagent-lineage-flink architecture</title>
+  <desc id="desc">Architecture diagram for the Java agent, Flink instrumentation, parser registry, lineage event, and reporters.</desc>
+  <style>
+    .canvas { fill: #ffffff; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 1.5; }
+    .core { fill: #e0f2fe; stroke: #0369a1; stroke-width: 1.5; }
+    .spi { fill: #ecfdf5; stroke: #047857; stroke-width: 1.5; }
+    .fail { fill: #fef2f2; stroke: #b91c1c; stroke-width: 1.5; }
+    .text { font-family: Arial, sans-serif; font-size: 15px; fill: #0f172a; }
+    .small { font-family: Arial, sans-serif; font-size: 12px; fill: #475569; }
+    .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #0f172a; }
+    .arrow { stroke: #334155; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect class="canvas" width="1280" height="760"/>
+  <text x="40" y="45" class="title">javaagent-lineage-flink Architecture</text>
+
+  <rect x="40" y="90" width="260" height="92" rx="8" class="box"/>
+  <text x="60" y="125" class="text">User deployment</text>
+  <text x="60" y="152" class="small">common + one Flink version directory</text>
+  <text x="60" y="172" class="small">only lineage-core uses -javaagent</text>
+
+  <rect x="380" y="80" width="250" height="120" rx="8" class="core"/>
+  <text x="405" y="115" class="text">lineage-core</text>
+  <text x="405" y="142" class="small">LineageAgent.premain</text>
+  <text x="405" y="162" class="small">FactoryDiscovery / Registry</text>
+  <text x="405" y="182" class="small">LineageRuntime</text>
+
+  <rect x="710" y="80" width="250" height="120" rx="8" class="spi"/>
+  <text x="735" y="115" class="text">System ClassLoader + SPI</text>
+  <text x="735" y="142" class="small">one LineageInstrumentation</text>
+  <text x="735" y="162" class="small">multiple LineageParsers</text>
+  <text x="735" y="182" class="small">at least one LineageReporter</text>
+
+  <rect x="1010" y="80" width="230" height="120" rx="8" class="spi"/>
+  <text x="1030" y="115" class="text">Extension jars</text>
+  <text x="1030" y="142" class="small">Flink version instrumentation</text>
+  <text x="1030" y="162" class="small">Kafka / Paimon parsers</text>
+  <text x="1030" y="182" class="small">logging / HTTP reporters</text>
+
+  <path d="M300 136 L380 136" class="arrow"/>
+  <path d="M630 136 L710 136" class="arrow"/>
+  <path d="M960 136 L1010 136" class="arrow"/>
+
+  <rect x="120" y="280" width="300" height="120" rx="8" class="box"/>
+  <text x="145" y="315" class="text">Flink instrumentation point</text>
+  <text x="145" y="342" class="small">PipelineExecutorUtils#getJobGraph</text>
+  <text x="145" y="362" class="small">Byte Buddy OnMethodExit advice</text>
+  <text x="145" y="382" class="small">exceptions are not suppressed</text>
+
+  <rect x="500" y="280" width="300" height="120" rx="8" class="box"/>
+  <text x="525" y="315" class="text">Runtime extraction</text>
+  <text x="525" y="342" class="small">verify StreamGraph pipeline</text>
+  <text x="525" y="362" class="small">verify JobGraph return value</text>
+  <text x="525" y="382" class="small">extract JobId / JobName / StreamNodes</text>
+
+  <rect x="880" y="280" width="300" height="120" rx="8" class="core"/>
+  <text x="905" y="315" class="text">LineageProcessor</text>
+  <text x="905" y="342" class="small">ParserRegistry</text>
+  <text x="905" y="362" class="small">ResultMerger</text>
+  <text x="905" y="382" class="small">CoverageValidator</text>
+
+  <path d="M505 200 L300 280" class="arrow"/>
+  <path d="M420 340 L500 340" class="arrow"/>
+  <path d="M800 340 L880 340" class="arrow"/>
+
+  <rect x="120" y="500" width="250" height="110" rx="8" class="spi"/>
+  <text x="145" y="535" class="text">Kafka / Paimon parsers</text>
+  <text x="145" y="562" class="small">match exact connector classes</text>
+  <text x="145" y="582" class="small">extract topics / tables / patterns</text>
+
+  <rect x="465" y="500" width="250" height="110" rx="8" class="core"/>
+  <text x="490" y="535" class="text">LineageEvent</text>
+  <text x="490" y="562" class="small">jobId / jobName</text>
+  <text x="490" y="582" class="small">sources / sinks</text>
+
+  <rect x="810" y="500" width="250" height="110" rx="8" class="spi"/>
+  <text x="835" y="535" class="text">Lineage reporters</text>
+  <text x="835" y="562" class="small">single-line JSON</text>
+  <text x="835" y="582" class="small">HTTP POST</text>
+
+  <rect x="465" y="650" width="250" height="58" rx="8" class="fail"/>
+  <text x="490" y="685" class="text">Failure blocks job submission</text>
+
+  <path d="M980 400 L270 500" class="arrow"/>
+  <path d="M370 555 L465 555" class="arrow"/>
+  <path d="M715 555 L810 555" class="arrow"/>
+  <path d="M590 610 L590 650" class="arrow"/>
+</svg>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 https://maven.apache.org/xsd/assembly-2.1.0.xsd">
+    <id>lineage-dist</id>
+    <formats>
+        <format>tar.gz</format>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <baseDirectory>javaagent-lineage-flink-${project.version}</baseDirectory>
+
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>lib/common</outputDirectory>
+            <includes>
+                <include>io.github.tkilome:lineage-core</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>lib/flink-1.19</outputDirectory>
+            <includes>
+                <include>io.github.tkilome:lineage-flink-1.19-instrumentation</include>
+                <include>io.github.tkilome:lineage-flink-parser-kafka-3.3.0-1.19</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>lib/flink-1.20</outputDirectory>
+            <includes>
+                <include>io.github.tkilome:lineage-flink-1.20-instrumentation</include>
+                <include>io.github.tkilome:lineage-flink-parser-kafka-3.4.0-1.20</include>
+                <include>io.github.tkilome:lineage-flink-parser-paimon-1.4-1.20</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>lib/reporter</outputDirectory>
+            <includes>
+                <include>io.github.tkilome:lineage-reporter-logging</include>
+                <include>io.github.tkilome:lineage-reporter-http</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
