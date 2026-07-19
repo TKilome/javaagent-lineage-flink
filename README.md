@@ -6,14 +6,18 @@ It intercepts Flink job graph generation, extracts job-level source and sink dat
 
 Currently supported:
 
-- Apache Flink `1.19.3`
-- Flink Kafka connector `3.3.0-1.19`
-- Apache Flink `1.20.0`
-- Flink Kafka connector `3.4.0-1.20`
-- Paimon `1.4` parser line for Flink `1.20`
-- Kafka -> Kafka lineage for DataStream and Flink SQL validation
-- Paimon source, exact-table sink, and CDC combined dynamic sink metadata parsing
-- Logging reporter and HTTP reporter
+| Flink version | Connector / parser | Supported lineage |
+| --- | --- | --- |
+| `1.19.3` | Kafka connector `3.3.0-1.19` | Kafka source and sink for DataStream and Flink SQL |
+| `1.20.0` | Kafka connector `3.4.0-1.20` | Kafka source and sink for DataStream and Flink SQL |
+| `1.20.0` | Paimon `1.4` | Paimon source, exact-table sink, and CDC combined dynamic sink metadata |
+
+Supported reporters:
+
+| Reporter | Output |
+| --- | --- |
+| Logging reporter | Single-line JSON lineage event |
+| HTTP reporter | Synchronous HTTP POST lineage event |
 
 ## Why this project
 
